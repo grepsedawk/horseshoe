@@ -1,0 +1,110 @@
+name: Lucky App CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  CheckFormat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.4.0
+
+      - uses: oprypin/install-crystal@v1
+        with:
+          crystal: latest
+
+      - name: Format
+        run: crystal tool format --check
+
+      - name: Set up Crystal cache
+        uses: actions/cache@v2.1.7
+        id: crystal-cache
+        with:
+          path: |
+            ~/.cache/crystal
+            bin/ameba
+            lib
+          key: ${{ runner.os }}-crystal-${{ hashFiles('**/shard.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-crystal-
+
+      - name: Install shards
+        if: steps.crystal-cache.outputs.cache-hit != 'true'
+        run: shards check || shards install --ignore-crystal-version
+
+      - name: Run ameba linter
+        run: ./bin/ameba
+
+  RunSpecs:
+    runs-on: ubuntu-latest
+
+    env:
+      LUCKY_ENV: test
+
+    strategy:
+      fail-fast: true
+      matrix:
+        crystal_version:
+          - 1.2.0
+          - latest
+        experimental:
+          - false
+        include:
+          - crystal_version: nightly
+            experimental: true
+
+    services:
+      postgres:
+        image: postgres:12-alpine
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v2.4.0
+
+      - uses: oprypin/install-crystal@v1
+        with:
+          crystal: ${{ matrix.crystal_version }}
+
+      - name: Set up Yarn cache
+        uses: actions/cache@v2.1.7
+        with:
+          path: "**/node_modules"
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Set up Crystal cache
+        uses: actions/cache@v2.1.7
+        id: crystal-cache
+        with:
+          path: |
+            ~/.cache/crystal
+            bin/ameba
+            lib
+          key: ${{ runner.os }}-crystal-${{ matrix.crystal_version }}-${{ hashFiles('**/shard.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-crystal-
+
+      - name: Install shards
+        if: steps.crystal-cache.outputs.cache-hit != 'true'
+        run: shards check || shards install --ignore-crystal-version
+
+      - name: Install yarn packages
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn install --frozen-lockfile --no-progress
+
+      - name: Compile assets
+        run: yarn prod
+
+      - name: Run tests
+        run: crystal spec
