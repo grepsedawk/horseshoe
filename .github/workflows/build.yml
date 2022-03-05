@@ -34,6 +34,8 @@ jobs:
           cp -rn horseshoe/.?* .
           rm -rf horseshoe/
 
+          sed -i '/^development_dependencies:/i \ \ ameba:\n\ \ \ \ github: crystal-ameba/ameba' shard.yml
+
       - name: Push Build to Main
         run: |
           git config --global user.email "alex@piechowski.io"
