@@ -1,17 +1,17 @@
 on: push
 
 jobs:
-  build:
+  install:
     if: github.repository != 'grepsedawk/horseshoe'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Build
+      - name: Install Template
         run: |
           rm .github/workflows/install.yml
-          mv .github/workflows/install/* .
+          mv .install/* .
 
           only_repo=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
           new_snek_name=$(echo $only_repo | sed 's/-/_/g')
@@ -23,7 +23,7 @@ jobs:
             mv "${old}" "${new}";
           done
 
-      - name: Push Build to Main
+      - name: Push Template Adjustments to Main
         run: |
           git config --global user.email "alex@piechowski.io"
           git config --global user.name "Alex Piechowski"
