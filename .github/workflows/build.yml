@@ -27,7 +27,7 @@ jobs:
           rm -f .github/workflows/build.yml
 
           echo "🔮Initializing via: lucky init"
-          printf "horseshoe\nfull\ny" | lucky init
+          lucky init.custom horseshoe
 
           echo "Merging template with shard init"
           cp -rn horseshoe/* .
