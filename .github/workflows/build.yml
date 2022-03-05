@@ -17,6 +17,7 @@ jobs:
           cd /tmp
           git clone https://github.com/luckyframework/lucky_cli
           cd lucky_cli
+          git checkout $(git describe --tags $(git rev-list --tags --max-count=1))
           shards install
           shards build
           mv bin/lucky /usr/local/bin/
@@ -37,6 +38,9 @@ jobs:
           rm -rf horseshoe/
 
           sed -i '/^development_dependencies:/i \ \ ameba:\n\ \ \ \ github: crystal-ameba/ameba' shard.yml
+
+          # TODO: Remove after https://github.com/luckyframework/lucky_cli/pull/739 is released
+          sed -i '49,58d' config/server.cr
 
       - name: Push Build to Main
         run: |
