@@ -1,0 +1,33 @@
+on: push
+
+jobs:
+  build:
+    if: github.repository != 'grepsedawk/horseshoe'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: |
+          rm .github/workflows/install.yml
+
+          only_repo=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
+          new_snek_name=$(echo $only_repo | sed 's/-/_/g')
+          new_constant_name=$(echo $only_repo | sed -r 's/(^|_|-)([a-z])/\U\2/g')
+          find . -type f -not -path '*/\.git/*' -exec sed -i "s/horseshoe/${new_snek_name}/g" {} +
+          find . -type f -not -path '*/\.git/*' -exec sed -i "s/Horseshoe/${new_constant_name}/g" {} +
+          find . -type f -name "*horseshoe*" -not -path '*/\.git/*' | while read old ; do
+            new="$(echo ${old} | sed -e "s/horseshoe/${new_snek_name}/g")";
+            mv "${old}" "${new}";
+          done
+
+      - name: Push Build to Main
+        run: |
+          git config --global user.email "alex@piechowski.io"
+          git config --global user.name "Alex Piechowski"
+          git add .
+          only_repo=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
+          new_snek_name=$(echo $only_repo | sed 's/-/_/g')
+          git commit -am "Rename horseshoe (template) to ${new_snek_name}"
+          git push -f
