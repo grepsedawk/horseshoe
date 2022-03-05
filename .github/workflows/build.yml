@@ -30,6 +30,8 @@ jobs:
           lucky init.custom horseshoe
 
           echo "Merging template with shard init"
+          mkdir -p .install
+          mv horseshoe/README.md .install/README.md
           cp -rn horseshoe/* .
           cp -rn horseshoe/.?* .
           rm -rf horseshoe/

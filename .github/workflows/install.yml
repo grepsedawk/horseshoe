@@ -11,6 +11,7 @@ jobs:
       - name: Build
         run: |
           rm .github/workflows/install.yml
+          mv .github/workflows/install/* .
 
           only_repo=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
           new_snek_name=$(echo $only_repo | sed 's/-/_/g')
