@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+set -e
+
+only_repo=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
+new_snek_name=$(echo $only_repo | sed 's/-/_/g')
+
+echo "🔮Initializing via: lucky init"
+lucky init.custom $new_snek_name
+ls -R
+
+echo "Merging template with lucky init"
+cp $new_snek_name/README.md .
+cp -rn $new_snek_name/* .
+cp -rn $new_snek_name/.?* .
+rm -rf $new_snek_name/
+ls -R
+
+echo "Adding ameba to shard.yml"
+sed -i '/^development_dependencies:/i \ \ ameba:\n\ \ \ \ github: crystal-ameba/ameba' shard.yml
+
+echo "Fixing ameba violation 😳"
+# TODO: Remove after https://github.com/luckyframework/lucky_cli/pull/739 is released
+sed -i '49,58d' config/server.cr
+
+echo "Removing install specific files"
+rm -f .github/workflows/install.yml
+rm -f .github/workflows/install

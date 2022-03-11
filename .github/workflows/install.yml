@@ -1,6 +1,4 @@
-on:
-  push:
-    branches: [main]
+on: push
 
 jobs:
   install:
@@ -41,33 +39,37 @@ jobs:
         run: |
           echo "- Running template build to overlay template..." >> README.md
           git add README.md
-          git commit --amend --no-edit
-          git push -f
 
       - uses: grepsedawk/force-push-changes@v0.1.0
 
-      - name: Build
+      - run: .github/workflows/install
+      - uses: grepsedawk/force-push-changes@v0.1.0
+
+  clone-example:
+    if: github.repository == 'grepsedawk/horseshoe' && github.ref == 'refs/heads/main'
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Crystal
+        uses: crystal-lang/install-crystal@v1.6.0
+
+      - name: Install Lucky
         run: |
-          only_repo=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
-          new_snek_name=$(echo $only_repo | sed 's/-/_/g')
+          cd /tmp
+          git clone https://github.com/luckyframework/lucky_cli
+          cd lucky_cli
+          git checkout $(git describe --tags $(git rev-list --tags --max-count=1))
+          shards install
+          shards build
+          mv bin/lucky /usr/local/bin/
 
-          echo "Removing build specific files"
-          rm -f .github/workflows/build.yml
-
-          echo "🔮Initializing via: lucky init"
-          lucky init.custom $new_snek_name
-
-          echo "Merging template with lucky init"
-          cp $new_snek_name/README.md .
-          cp -rn $new_snek_name/* .
-          cp -rn $new_snek_name/.?* .
-          rm -rf $new_snek_name/
-
-          echo "Adding ameba to shard.yml"
-          sed -i '/^development_dependencies:/i \ \ ameba:\n\ \ \ \ github: crystal-ameba/ameba' shard.yml
-
-          echo "Fixing ameba violation 😳"
-          # TODO: Remove after https://github.com/luckyframework/lucky_cli/pull/739 is released
-          sed -i '49,58d' config/server.cr
-
-      - uses: grepsedawk/force-push-changes@v0.1.0
+      - run: .github/workflows/install
+      - run: git checkout -b example
+      - run: git add .
+      - run: |
+          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          git config user.name "${GITHUB_ACTOR}"
+      - run: git commit -m "Demo Install"
+      - run: git push --force origin example
