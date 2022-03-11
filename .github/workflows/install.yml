@@ -1,4 +1,6 @@
-on: push
+on:
+  push:
+    branches: [main]
 
 jobs:
   install:
@@ -8,27 +10,64 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install Template
+      - name: Add README Progress
         run: |
-          rm .github/workflows/install.yml
-          mv .install/* .
+          echo "# Template Build In Progress" > README.md
+          echo >> README.md
+          echo "- Installing Crystal..." >> README.md
 
-          only_repo=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
-          new_snek_name=$(echo $only_repo | sed 's/-/_/g')
-          new_constant_name=$(echo $only_repo | sed -r 's/(^|_|-)([a-z])/\U\2/g')
-          find . -type f -not -path '*/\.git/*' -exec sed -i "s/horseshoe/${new_snek_name}/g" {} +
-          find . -type f -not -path '*/\.git/*' -exec sed -i "s/Horseshoe/${new_constant_name}/g" {} +
-          find . -type f -name "*horseshoe*" -not -path '*/\.git/*' | while read old ; do
-            new="$(echo ${old} | sed -e "s/horseshoe/${new_snek_name}/g")";
-            mv "${old}" "${new}";
-          done
+      - uses: grepsedawk/force-push-changes@v0.1.0
 
-      - name: Push Template Adjustments to Main
+      - name: Install Crystal
+        uses: crystal-lang/install-crystal@v1.6.0
+
+      - name: Add README Progress
         run: |
-          git config --global user.email "alex@piechowski.io"
-          git config --global user.name "Alex Piechowski"
-          git add .
-          only_repo=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
-          new_snek_name=$(echo $only_repo | sed 's/-/_/g')
-          git commit -am "Rename horseshoe (template) to ${new_snek_name}"
+          echo "- Installing Latest lucky_cli release..." >> README.md
+
+      - uses: grepsedawk/force-push-changes@v0.1.0
+
+      - name: Install Lucky
+        run: |
+          cd /tmp
+          git clone https://github.com/luckyframework/lucky_cli
+          cd lucky_cli
+          git checkout $(git describe --tags $(git rev-list --tags --max-count=1))
+          shards install
+          shards build
+          mv bin/lucky /usr/local/bin/
+
+      - name: Add README Progress
+        run: |
+          echo "- Running template build to overlay template..." >> README.md
+          git add README.md
+          git commit --amend --no-edit
           git push -f
+
+      - uses: grepsedawk/force-push-changes@v0.1.0
+
+      - name: Build
+        run: |
+          only_repo=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
+          new_snek_name=$(echo $only_repo | sed 's/-/_/g')
+
+          echo "Removing build specific files"
+          rm -f .github/workflows/build.yml
+
+          echo "🔮Initializing via: lucky init"
+          lucky init.custom $new_snek_name
+
+          echo "Merging template with lucky init"
+          cp $new_snek_name/README.md .
+          cp -rn $new_snek_name/* .
+          cp -rn $new_snek_name/.?* .
+          rm -rf $new_snek_name/
+
+          echo "Adding ameba to shard.yml"
+          sed -i '/^development_dependencies:/i \ \ ameba:\n\ \ \ \ github: crystal-ameba/ameba' shard.yml
+
+          echo "Fixing ameba violation 😳"
+          # TODO: Remove after https://github.com/luckyframework/lucky_cli/pull/739 is released
+          sed -i '49,58d' config/server.cr
+
+      - uses: grepsedawk/force-push-changes@v0.1.0
