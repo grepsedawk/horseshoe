@@ -16,8 +16,9 @@ cp -rn $new_snek_name/.?* .
 rm -rf $new_snek_name/
 ls -R
 
-echo "Adding ameba to shard.yml"
+echo "Adding changes to shard.yml"
 sed -i '/^development_dependencies:/i \ \ ameba:\n\ \ \ \ github: crystal-ameba/ameba' shard.yml
+sed -i "s/${new_snek_name}:/app:/" shard.yml
 
 echo "Fixing ameba violation 😳"
 # TODO: Remove after https://github.com/luckyframework/lucky_cli/pull/739 is released
