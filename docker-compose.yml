@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - target: 5432
+        published: 5432
+    volumes:
+      - type: volume
+        source: postgres_data_horseshoe
+        target: /var/lib/postgresql/data
+
+volumes:
+  postgres_data_horseshoe:
