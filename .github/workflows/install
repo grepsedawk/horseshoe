@@ -14,7 +14,11 @@ cp $new_snek_name/README.md .
 cp -rn $new_snek_name/* .
 cp -rn $new_snek_name/.?* .
 rm -rf $new_snek_name/
+
+echo "Replacing Laravel Mix with esbuild"
 ls -R
+rm -f src/js/app.js
+sed -i 's/Lucky::AssetHelpers.load_manifest "public\/mix-manifest.json"/Lucky::AssetHelpers.load_manifest "public\/manifest.json"/g' src/app.cr
 
 echo "Adding changes to shard.yml"
 sed -i '/^development_dependencies:/i \ \ ameba:\n\ \ \ \ github: crystal-ameba/ameba' shard.yml
