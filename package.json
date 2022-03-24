@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "build:js": "esbuild src/js/* --outdir=public/js --bundle",
+    "build:css": "tailwindcss --input=src/css/app.css --output=public/css/app.css",
+    "dev:js": "yarn build:js --watch",
+    "dev:css": "yarn build:css --watch",
+    "dev": "yarn build:js && yarn build:css",
+    "prod": "yarn build:js --minify && yarn build:css",
+    "heroku-postbuild": "yarn prod"
+  },
+  "devDependencies": {
+    "esbuild": "^0.14.25",
+    "tailwindcss": "^3.0.23"
+  }
+}
