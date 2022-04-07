@@ -3,7 +3,7 @@
 set -e
 
 only_repo=$(echo $GITHUB_REPOSITORY | cut -d'/' -f2)
-new_snek_name=$(echo $only_repo | sed 's/-/_/g')
+new_snek_name=$(echo $only_repo | sed 's/-/_/g' | sed 's/\./_/g')
 
 echo "🔮Initializing via: lucky init"
 lucky init.custom $new_snek_name
