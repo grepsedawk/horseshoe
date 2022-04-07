@@ -9,6 +9,7 @@
     "heroku-postbuild": "yarn prod"
   },
   "devDependencies": {
+    "@hotwired/stimulus": "^3.0.1",
     "@hotwired/turbo": "^7.1.0",
     "esbuild": "^0.14.25",
     "tailwindcss": "^3.0.23"
