@@ -16,6 +16,7 @@ rm -rf $new_snek_name/
 
 echo "Replacing Laravel Mix with esbuild"
 rm -f src/js/app.js
+rm -f webpack.mix.js
 sed -i 's/Lucky::AssetHelpers.load_manifest "public\/mix-manifest.json"/Lucky::AssetHelpers.load_manifest "public\/manifest.json"/g' src/app.cr
 
 echo "Touching up app to work with docker postgres"
