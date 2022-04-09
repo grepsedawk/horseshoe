@@ -1,3 +1,5 @@
+require("@rails/ujs").start();
+
 import * as Turbo from "@hotwired/turbo"
 
 import { Application } from "@hotwired/stimulus"

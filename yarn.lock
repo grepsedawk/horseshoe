@@ -54,6 +54,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@rails/ujs@^6.1.5":
+  version "6.1.5"
+  resolved "https://registry.yarnpkg.com/@rails/ujs/-/ujs-6.1.5.tgz#bb1afddd0d771f00924f44b21634969e329532e1"
+  integrity sha512-Ir4yd2fdDldWIghavPr874copVKf6OOoecKHZiFRlPtm38tFvhyxr+ywzNieXGwolF9JQe3D5GrM8ejkzUgh5Q==
+
 "@types/parse-json@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
