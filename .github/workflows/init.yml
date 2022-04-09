@@ -1,3 +1,5 @@
+name: lucky init
+
 on: push
 
 jobs:
@@ -42,7 +44,7 @@ jobs:
 
       - uses: grepsedawk/force-push-changes@v0.1.0
 
-      - run: .github/workflows/install
+      - run: .github/workflows/init
       - uses: grepsedawk/force-push-changes@v0.1.0
 
   clone-example:
@@ -65,7 +67,7 @@ jobs:
           shards build
           mv bin/lucky /usr/local/bin/
 
-      - run: .github/workflows/install
+      - run: .github/workflows/init
       - run: git checkout -b example
       - run: git add .
       - run: |

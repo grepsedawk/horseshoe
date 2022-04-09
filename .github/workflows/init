@@ -24,9 +24,9 @@ sed -i '/^lucky db.create/i docker-compose up -d postgres' script/setup
 sed -i 's/horseshoe/'$new_snek_name'/g' docker-compose.yml
 
 echo "Adding changes to shard.yml"
-sed -i '/^development_dependencies:/i \ \ ameba:\n\ \ \ \ github: crystal-ameba/ameba' shard.yml
+sed -i '/^development_dependencies:/a \ \ ameba:\n\ \ \ \ github: crystal-ameba/ameba' shard.yml
 sed -i "s/${new_snek_name}:/app:/" shard.yml
 
 echo "Removing install specific files"
-rm -f .github/workflows/install.yml
-rm -f .github/workflows/install
+rm -f .github/workflows/init.yml
+rm -f .github/workflows/init

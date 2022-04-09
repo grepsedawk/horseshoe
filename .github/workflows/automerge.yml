@@ -6,6 +6,7 @@ on:
       - completed
     workflows:
       - 'Lucky App CI'
+      - 'lucky init'
 
 jobs:
   auto_merge:
