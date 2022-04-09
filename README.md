@@ -8,6 +8,7 @@ over the lucky base app.
 
 ## What is added?
 
+- [esbuild](https://esbuild.github.io/), which is way (up to 1000x) faster than webpack
 - [tailwindcss](https://tailwindcss.com/)
 - [turbo](https://turbo.hotwired.dev/)
 - [stimulus](https://stimulus.hotwired.dev/)
