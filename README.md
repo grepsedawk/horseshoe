@@ -8,8 +8,14 @@ over the lucky base app.
 
 ## What is added?
 
+- [tailwindcss](https://tailwindcss.com/)
+- [turbo](https://turbo.hotwired.dev/)
+- [stimulus](https://stimulus.hotwired.dev/)
 - [ameba](https://github.com/crystal-ameba/ameba) for style checking
 - Github Action for CI
   - `crystal tool format` and `ameba` style linting
   - `crystal spec` for testing
+- Dependabot Configuration
+  - Github actions
+  - yarn
 - Github Action to automatically merge minor/patch dependabot PRs
