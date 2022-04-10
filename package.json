@@ -14,5 +14,8 @@
     "@rails/ujs": "^6.1.5",
     "esbuild": "^0.14.25",
     "tailwindcss": "^3.0.23"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.27.9"
   }
 }
