@@ -22,6 +22,7 @@ sed -i 's/Lucky::AssetHelpers.load_manifest "public\/mix-manifest.json"/Lucky::A
 echo "Touching up app to work with docker postgres"
 sed -i '/^lucky db.create/i docker-compose up -d postgres' script/setup
 sed -i 's/horseshoe/'$new_snek_name'/g' docker-compose.yml
+rm -rf ./docker/
 
 echo "Adding changes to shard.yml"
 sed -i '/^development_dependencies:/a \ \ ameba:\n\ \ \ \ github: crystal-ameba/ameba' shard.yml
