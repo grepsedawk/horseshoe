@@ -8,7 +8,7 @@ jobs:
   CheckFormat:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3.0.1
+      - uses: actions/checkout@v3.0.2
 
       - uses: oprypin/install-crystal@v1
         with:
@@ -68,7 +68,7 @@ jobs:
           --health-retries 5
 
     steps:
-      - uses: actions/checkout@v3.0.1
+      - uses: actions/checkout@v3.0.2
 
       - uses: oprypin/install-crystal@v1
         with:
