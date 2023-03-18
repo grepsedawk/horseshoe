@@ -2,6 +2,8 @@ name: lucky init
 
 on: push
 
+permissions: write-all
+
 jobs:
   install:
     if: github.repository != 'grepsedawk/horseshoe'
