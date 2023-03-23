@@ -16,7 +16,7 @@
     "tailwindcss": "^3.2.7"
   },
   "devDependencies": {
-    "browser-sync": "^2.29.0",
+    "browser-sync": "^2.29.1",
     "prettier": "^2.8.5"
   }
 }
