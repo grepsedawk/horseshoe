@@ -17,6 +17,6 @@
   },
   "devDependencies": {
     "browser-sync": "^2.29.3",
-    "prettier": "^2.8.5"
+    "prettier": "^3.0.3"
   }
 }
